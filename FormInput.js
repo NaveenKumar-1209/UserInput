@@ -3,6 +3,10 @@ import "./FormInput.css";
 import useInput from "./static/use-input";
 
 const InputForm = (props) => {
+  const isNotEmpty = (value) => value.trim() !== "";
+  const isEmail = (value) => value.includes("@");
+  const isPassward = (value) => value.length >= 5;
+
   const {
     value: enteredName,
     isValid: enteredNameIsValid,
@@ -10,7 +14,7 @@ const InputForm = (props) => {
     valueChangeHandler: nameChangeHandler,
     inputBlurHandler: nameBlurHandler,
     reset: resetNameInput,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(isNotEmpty);
 
   const {
     value: enteredEmail,
@@ -19,7 +23,7 @@ const InputForm = (props) => {
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
     reset: resetEmailInput,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(isEmail);
 
   const {
     value: enteredPassward,
@@ -28,9 +32,10 @@ const InputForm = (props) => {
     valueChangeHandler: passwardChangeHandler,
     inputBlurHandler: passwardBlurHandler,
     reset: resetPasswardInput,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(isPassward);
 
   let formIsValid = false;
+  // let EmailInputHasErrorMessage = false;
 
   if (enteredNameIsValid && enteredEmailIsValid && enteredPasswardIsValid) {
     formIsValid = true;
@@ -39,25 +44,24 @@ const InputForm = (props) => {
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
-    resetNameInput();
-
     if (!enteredNameIsValid) {
       return;
     }
 
-    resetEmailInput();
-
     if (!enteredEmailIsValid) {
       return;
     }
-    resetPasswardInput();
 
     if (!enteredPasswardIsValid) {
       return;
     }
-  };
+    console.log("submitted");
+    console.log({ enteredName, enteredEmail, enteredPassward });
 
-  console.log({enteredName, enteredPassward, enteredEmail})
+    resetNameInput();
+    resetEmailInput();
+    resetPasswardInput();
+  };
   return (
     <div className="MainBody">
       <h3 className="title">Registration</h3>
@@ -74,7 +78,9 @@ const InputForm = (props) => {
               value={enteredName}
             />
             {nameInputHasError && (
-              <p className="error-text" style={{color:"red"}}>Name must not be empty</p>
+              <p className="error-text" style={{ color: "red" }}>
+                Name must not be empty
+              </p>
             )}
           </div>
           <div className="input-box">
@@ -88,7 +94,9 @@ const InputForm = (props) => {
               value={enteredEmail}
             />
             {emailInputHasError && (
-              <p className="error-text" style={{color:"red"}}>Email must not be empty</p>
+              <p className="error-text" style={{ color: "red" }}>
+                Enter a valid Email id
+              </p>
             )}
           </div>
           <div className="input-box">
@@ -102,7 +110,9 @@ const InputForm = (props) => {
               value={enteredPassward}
             />
             {passwardInputHasError && (
-              <p className="error-text" style={{color:"red"}}>Passward must not be empty</p>
+              <p className="error-text" style={{ color: "red" }}>
+                Enter a valid passward
+              </p>
             )}
           </div>
         </div>
